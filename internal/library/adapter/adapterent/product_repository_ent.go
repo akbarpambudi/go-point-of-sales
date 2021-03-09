@@ -9,16 +9,27 @@ import (
 )
 
 type ProductRepository struct {
-	client *ent.ProductClient
+	client *ent.Client
 }
 
-func NewProductRepository(client *ent.ProductClient) *ProductRepository {
+func NewProductRepository(client *ent.Client) *ProductRepository {
 	return &ProductRepository{client: client}
 }
 
-func (p ProductRepository) Create(ctx context.Context, entity *product.Product) error {
+func (p ProductRepository) Create(ctx context.Context, entity *product.Product) (err error) {
+	tx, err := p.client.Tx(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if err != nil {
+			if tx != nil {
+				err = tx.Rollback()
+			}
+		}
+	}()
 
-	var variants ent.Variants
+	var variantCreationQueries []*ent.VariantCreate
 	id, err := uuid.Parse(entity.ID())
 
 	if err != nil {
@@ -30,21 +41,27 @@ func (p ProductRepository) Create(ctx context.Context, entity *product.Product) 
 		if err != nil {
 			return err
 		}
-		variants = append(variants, &ent.Variant{
-			ID:    id,
-			Code:  v.Code(),
-			Name:  v.Name(),
-			Price: v.Price(),
-		})
+		query := tx.Variant.Create().SetID(id).SetName(v.Name()).SetCode(v.Code()).SetPrice(v.Price())
+		variantCreationQueries = append(variantCreationQueries, query)
 	}
 
-	_, err = p.client.Create().
+	variants, err := tx.Variant.CreateBulk(variantCreationQueries...).Save(ctx)
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Product.Create().
 		SetID(id).
 		SetName(entity.Name()).
 		SetCategoryRef(entity.CategoryRef()).
 		AddVariants(variants...).
 		Save(ctx)
-	return err
+
+	if err != nil {
+		return err
+	}
+
+	return tx.Commit()
 }
 
 func (p ProductRepository) Update(ctx context.Context, id string, entity *product.Product) error {
@@ -66,7 +83,7 @@ func (p ProductRepository) Update(ctx context.Context, id string, entity *produc
 			Price: v.Price(),
 		})
 	}
-	_, err = p.client.Update().
+	_, err = p.client.Product.Update().
 		SetName(entity.Name()).
 		SetCategoryRef(entity.CategoryRef()).
 		ClearVariants().
@@ -81,7 +98,7 @@ func (p ProductRepository) Load(ctx context.Context, id string) (entity *product
 	if err != nil {
 		return nil, err
 	}
-	result, err := p.client.Query().Where(entproduct.ID(_id)).Where(entproduct.ID(_id)).WithVariants().Only(ctx)
+	result, err := p.client.Product.Query().Where(entproduct.ID(_id)).Where(entproduct.ID(_id)).WithVariants().Only(ctx)
 
 	if err != nil {
 		return nil, err
