@@ -1,0 +1,88 @@
+openapi: 3.0.0
+info:
+  title: Product
+  description: Product
+  version: 1.0.0
+components:
+  parameters:
+    ProductIdParameter:
+      name: productId
+      in: path
+      required: true
+      description: product id
+      schema:
+        type: string
+
+  responses:
+    GetProductByIdSuccessResponse:
+      description: get product by id success response
+      content:
+        application/json:
+          schema:
+            type: object
+            $ref: '#/components/schemas/Product'
+    ProductCreationSuccessResponse:
+      description: product created response
+      content:
+        application/json:
+          schema:
+            type: object
+            $ref: '#/components/schemas/ProductCreated'
+
+  schemas:
+    ProductCreated:
+      type: object
+      properties:
+        id:
+          type: string
+    Variant:
+      type: object
+      properties:
+        id:
+          type: string
+        code:
+          type: string
+        name:
+          type: string
+        price:
+          type: number
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        categoryRef:
+          type: string
+        variants:
+          type: array
+          items:
+            $ref: '#/components/schemas/Variant'
+
+
+servers:
+  - url: 'https://{hostname}/api'
+paths:
+  /product/{productId}:
+    get:
+      description: get product by id
+      parameters:
+        - $ref: '#/components/parameters/ProductIdParameter'
+      responses:
+        '200':
+          description: OK
+          $ref: '#/components/responses/GetProductByIdSuccessResponse'
+  /product:
+    post:
+      description: create new product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+      responses:
+        '201':
+          description: Product created
+          $ref: '#/components/responses/ProductCreationSuccessResponse'
+
