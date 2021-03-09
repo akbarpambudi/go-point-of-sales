@@ -9,19 +9,35 @@ type CreateProduct struct {
 	ID          string
 	Name        string
 	CategoryRef string
-	Variants    []*product.Variant
+	Variants    []ProductVariantDTO
 }
 
-type CreateProductHandler struct {
+type CreateProductHandler interface {
+	Handle(ctx context.Context, cmd CreateProduct) error
+}
+
+type CreateProductHandlerImpl struct {
 	repo product.Repository
 }
 
-func NewCreateProductHandler(repo product.Repository) *CreateProductHandler {
-	return &CreateProductHandler{repo: repo}
+func NewCreateProductHandlerImpl(repo product.Repository) *CreateProductHandlerImpl {
+	return &CreateProductHandlerImpl{repo: repo}
 }
 
-func (c CreateProductHandler) Handle(ctx context.Context, cmd CreateProduct) error {
-	ent, err := product.NewProduct(cmd.ID, cmd.CategoryRef, cmd.Name, cmd.Variants)
+func (c CreateProductHandlerImpl) Handle(ctx context.Context, cmd CreateProduct) error {
+
+	var productVariants []*product.Variant
+
+	for _, v := range cmd.Variants {
+		productVariant, err := product.NewVariant(v.ID, v.Code, v.Name, v.Price)
+		if err != nil {
+			return err
+		}
+
+		productVariants = append(productVariants, productVariant)
+	}
+
+	ent, err := product.NewProduct(cmd.ID, cmd.CategoryRef, cmd.Name, productVariants)
 	if err != nil {
 		return err
 	}

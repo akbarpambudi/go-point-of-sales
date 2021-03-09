@@ -15,27 +15,29 @@ import (
 type CreateProductHandlerTestSuite struct {
 	suite.Suite
 	repository *mockproduct.MockRepository
-	sut        *command.CreateProductHandler
+	sut        *command.CreateProductHandlerImpl
 }
 
 func (s *CreateProductHandlerTestSuite) SetupTest() {
 	mockCtrl := gomock.NewController(s.T())
 	s.repository = mockproduct.NewMockRepository(mockCtrl)
-	s.sut = command.NewCreateProductHandler(s.repository)
+	s.sut = command.NewCreateProductHandlerImpl(s.repository)
 }
 
 func (s CreateProductHandlerTestSuite) TestCallHandleToHandleCreateProductCommandShouldBeSuccess() {
 	ctx := context.Background()
 
-	variant1, variantConstructionErr := product.NewVariant("74d6eafe-e547-47e0-9058-7621ff86faf2", "110", "Paket Komplit", 1000)
-	s.Require().NoError(variantConstructionErr)
-
 	cmd := command.CreateProduct{
 		ID:          "7da82be2-139f-4b16-b083-231d7c30ffbf",
 		Name:        "Pecel",
 		CategoryRef: "6d3335fa-0bf7-4f3c-a439-14d7c2e31c06",
-		Variants: []*product.Variant{
-			variant1,
+		Variants: []command.ProductVariantDTO{
+			{
+				ID:    "7da82be2-139f-4b16-b083-231d7c30ffbf",
+				Code:  "",
+				Name:  "paket komplit",
+				Price: 10,
+			},
 		},
 	}
 
@@ -53,7 +55,7 @@ func (s CreateProductHandlerTestSuite) TestCallHandleToHandleCreateProductComman
 		ID:          "",
 		Name:        "",
 		CategoryRef: "",
-		Variants:    []*product.Variant{},
+		Variants:    []command.ProductVariantDTO{},
 	}
 
 	s.repository.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil)
