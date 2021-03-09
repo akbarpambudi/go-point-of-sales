@@ -1,13 +1,13 @@
 package product
 
-import "github.com/pkg/errors"
+import "github.com/akbarpambudi/go-point-of-sales/internal/common/errors"
 
 var (
-	ErrProductIDCantBeEmpty            = errors.New("product id should not empty")
-	ErrProductCategoryRefCantBeEmpty   = errors.New("product categoryRef should not empty")
-	ErrProductNameCantBeEmpty          = errors.New("product name should not empty")
-	ErrProductAtLeastHaveOneVariant    = errors.New("product variant should have at least 1 variant")
-	ErrVariantIDCantBeEmpty            = errors.New("variant id should not empty")
-	ErrVariantPriceMustGreaterThanZero = errors.New("variant price should greater than 0")
-	ErrVariantNameCantBeEmpty          = errors.New("variant name should not empty")
+	ErrProductIDCantBeEmpty            = errors.NewIllegalInputError("err.product.id.shouldNotEmpty", "product id should not empty")
+	ErrProductCategoryRefCantBeEmpty   = errors.NewIllegalInputError("err.product.categoryRef.shouldNotEmpty", "product categoryRef should not empty")
+	ErrProductNameCantBeEmpty          = errors.NewIllegalInputError("err.product.name.shouldNotEmpty", "product name should not empty")
+	ErrProductAtLeastHaveOneVariant    = errors.NewIllegalInputError("err.product.variants.shouldHasOneOrMoreVariant", "product variant should have at least 1 variant")
+	ErrVariantIDCantBeEmpty            = errors.NewIllegalInputError("err.variant.id.shouldNotEmpty", "variant id should not empty")
+	ErrVariantPriceMustGreaterThanZero = errors.NewIllegalInputError("err.variant.price.shouldMoreThanZero", "variant price should greater than 0")
+	ErrVariantNameCantBeEmpty          = errors.NewIllegalInputError("err.variant.name.shouldNotEmpty", "variant name should not empty")
 )
