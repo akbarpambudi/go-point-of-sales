@@ -1,6 +1,8 @@
-package product
+package category
 
-import "go.uber.org/multierr"
+import (
+	"go.uber.org/multierr"
+)
 
 type Category struct {
 	id   string

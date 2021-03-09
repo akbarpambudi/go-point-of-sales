@@ -1,8 +1,8 @@
-package product_test
+package category_test
 
 import (
 	"fmt"
-	"github.com/akbarpambudi/go-point-of-sales/internal/library/domain/product"
+	"github.com/akbarpambudi/go-point-of-sales/internal/library/domain/category"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/multierr"
 	"testing"
@@ -13,7 +13,7 @@ type CategoryTestSuite struct {
 }
 
 func (s CategoryTestSuite) TestCallNewCategoryToCreateNewCategoryShouldBeSuccess() {
-	sut, err := product.NewCategory("7da82be2-139f-4b16-b083-231d7c30ffbf", "Main Course")
+	sut, err := category.NewCategory("7da82be2-139f-4b16-b083-231d7c30ffbf", "Main Course")
 
 	s.Run("ShouldNotError", func() {
 		s.Assert().NoError(err)
@@ -44,26 +44,26 @@ func (s CategoryTestSuite) TestCallNewCategoryShouldValidateInput() {
 	testTable := []testRecord{
 		{
 			args: testArgs{},
-			want: multierr.Combine(product.ErrCategoryIDCantBeEmpty, product.ErrCategoryNameCantBeEmpty),
+			want: multierr.Combine(category.ErrCategoryIDCantBeEmpty, category.ErrCategoryNameCantBeEmpty),
 		},
 		{
 			args: testArgs{
 				id: "7da82be2-139f-4b16-b083-231d7c30ffbf",
 			},
-			want: product.ErrCategoryNameCantBeEmpty,
+			want: category.ErrCategoryNameCantBeEmpty,
 		},
 		{
 			args: testArgs{
 				name: "Main Course",
 			},
-			want: product.ErrCategoryIDCantBeEmpty,
+			want: category.ErrCategoryIDCantBeEmpty,
 		},
 	}
 
 	for i, r := range testTable {
 		testCaseName := fmt.Sprintf("TestCase#%v", i)
 		s.Run(testCaseName, func() {
-			_, got := product.NewCategory(r.args.id, r.args.name)
+			_, got := category.NewCategory(r.args.id, r.args.name)
 			s.Assert().Equal(r.want, got)
 		})
 	}
