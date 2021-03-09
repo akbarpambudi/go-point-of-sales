@@ -10,6 +10,4 @@ var (
 	ErrVariantIDCantBeEmpty            = errors.New("variant id should not empty")
 	ErrVariantPriceMustGreaterThanZero = errors.New("variant price should greater than 0")
 	ErrVariantNameCantBeEmpty          = errors.New("variant name should not empty")
-	ErrCategoryIDCantBeEmpty           = errors.New("category id should not empty")
-	ErrCategoryNameCantBeEmpty         = errors.New("category name should not empty")
 )
