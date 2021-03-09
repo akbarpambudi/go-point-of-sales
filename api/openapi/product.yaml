@@ -66,15 +66,16 @@ servers:
 paths:
   /product/{productId}:
     get:
+      operationId: getProductById
       description: get product by id
       parameters:
         - $ref: '#/components/parameters/ProductIdParameter'
       responses:
         '200':
-          description: OK
           $ref: '#/components/responses/GetProductByIdSuccessResponse'
   /product:
     post:
+      operationId: createProduct
       description: create new product
       requestBody:
         content:
@@ -83,6 +84,5 @@ paths:
               $ref: '#/components/schemas/Product'
       responses:
         '201':
-          description: Product created
           $ref: '#/components/responses/ProductCreationSuccessResponse'
 
