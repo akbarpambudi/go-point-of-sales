@@ -1,0 +1,32 @@
+openapi: 3.0.0
+info:
+  title: Category
+  description: Product Category
+  version: 1.0.0
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+
+servers:
+  - url: 'https://{hostname}/api'
+paths:
+  /category:
+    post:
+      operationId: createCategory
+      description: create new category
+      requestBody:
+        content:
+          application/json:
+           schema:
+             $ref: "#/components/schemas/Category"
+      responses:
+        '200':
+          description: OK
+
