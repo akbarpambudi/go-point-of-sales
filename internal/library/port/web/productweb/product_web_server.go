@@ -1,4 +1,4 @@
-package web
+package productweb
 
 import (
 	"github.com/akbarpambudi/go-point-of-sales/internal/common/httphelper"
@@ -9,15 +9,15 @@ import (
 	"net/http"
 )
 
-type ProductWebServer struct {
+type Server struct {
 	application app.Application
 }
 
-func NewProductWebServer(application app.Application) *ProductWebServer {
-	return &ProductWebServer{application: application}
+func NewServer(application app.Application) *Server {
+	return &Server{application: application}
 }
 
-func (p ProductWebServer) CreateProduct(ctx echo.Context) error {
+func (p Server) CreateProduct(ctx echo.Context) error {
 	var reqBody CreateProductJSONBody
 	err := ctx.Bind(&reqBody)
 	if err != nil {
@@ -50,7 +50,7 @@ func (p ProductWebServer) CreateProduct(ctx echo.Context) error {
 	return nil
 }
 
-func (p ProductWebServer) GetProductById(ctx echo.Context, productId ProductIdParameter) error {
+func (p Server) GetProductById(ctx echo.Context, productId ProductIdParameter) error {
 	productReadModel, err := p.application.Queries.GetProductById.Handle(ctx.Request().Context(), string(productId))
 	if err != nil {
 		return httphelper.WrapError(err)
