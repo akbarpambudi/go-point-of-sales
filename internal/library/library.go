@@ -15,8 +15,8 @@ func NewWebService(ctx context.Context) (http.Handler, func(), error) {
 	if err != nil {
 		return nil, nil, err
 	}
-
-	web.RegisterHandlers(e, web.NewProductWebServer(application))
+	apiGroup := e.Group("/api")
+	web.RegisterHandlers(apiGroup, web.NewProductWebServer(application))
 
 	return e, cleansingFunc, nil
 }
