@@ -6,7 +6,8 @@ import (
 )
 
 type Commands struct {
-	CreateProduct command.CreateProductHandler
+	CreateProduct  command.CreateProductHandler
+	CreateCategory command.CreateCategoryHandler
 }
 
 type Queries struct {

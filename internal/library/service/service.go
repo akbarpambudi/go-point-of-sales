@@ -23,10 +23,12 @@ func NewApplication(ctx context.Context) (app.Application, func(), error) {
 	}
 
 	productRepository := adapterent.NewProductRepository(client)
+	categoryRepository := adapterent.NewCategoryRepositoryEnt(client)
 
 	return app.Application{
 			Commands: app.Commands{
-				CreateProduct: command.NewCreateProductHandlerImpl(productRepository),
+				CreateProduct:  command.NewCreateProductHandlerImpl(productRepository),
+				CreateCategory: command.NewCreateCategoryHandlerImpl(categoryRepository),
 			},
 			Queries: app.Queries{
 				GetProductById: query.NewGetProductByIDHandlerImpl(productRepository),
