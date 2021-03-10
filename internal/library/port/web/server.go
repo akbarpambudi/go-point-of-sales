@@ -56,11 +56,23 @@ func (p ProductWebServer) GetProductById(ctx echo.Context, productId ProductIdPa
 		return httphelper.WrapError(err)
 	}
 
+	var variants []Variant
+
+	for _, v := range productReadModel.Variants {
+		variantPrice := float32(v.Price)
+		variants = append(variants, Variant{
+			Code:  &v.Code,
+			Id:    &v.ID,
+			Name:  &v.Name,
+			Price: &variantPrice,
+		})
+	}
+
 	err = ctx.JSON(http.StatusOK, Product{
 		CategoryRef: &productReadModel.Category,
 		Id:          &productReadModel.ID,
 		Name:        &productReadModel.Name,
-		Variants:    nil,
+		Variants:    &variants,
 	})
 
 	if err != nil {
