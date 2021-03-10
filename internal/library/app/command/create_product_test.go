@@ -14,14 +14,14 @@ import (
 //go:generate mockgen -source=./../../domain/product/repository.go -destination=./mock/mockproduct/mock_gen.go -package=mockproduct
 type CreateProductHandlerTestSuite struct {
 	suite.Suite
-	repository *mockproduct.MockRepository
-	sut        *command.CreateProductHandlerImpl
+	mockRepository *mockproduct.MockRepository
+	sut            *command.CreateProductHandlerImpl
 }
 
 func (s *CreateProductHandlerTestSuite) SetupTest() {
 	mockCtrl := gomock.NewController(s.T())
-	s.repository = mockproduct.NewMockRepository(mockCtrl)
-	s.sut = command.NewCreateProductHandlerImpl(s.repository)
+	s.mockRepository = mockproduct.NewMockRepository(mockCtrl)
+	s.sut = command.NewCreateProductHandlerImpl(s.mockRepository)
 }
 
 func (s CreateProductHandlerTestSuite) TestCallHandleToHandleCreateProductCommandShouldBeSuccess() {
@@ -41,7 +41,7 @@ func (s CreateProductHandlerTestSuite) TestCallHandleToHandleCreateProductComman
 		},
 	}
 
-	s.repository.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil)
+	s.mockRepository.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil)
 
 	err := s.sut.Handle(ctx, cmd)
 
@@ -58,7 +58,7 @@ func (s CreateProductHandlerTestSuite) TestCallHandleToHandleCreateProductComman
 		Variants:    []command.ProductVariantDTO{},
 	}
 
-	s.repository.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil)
+	s.mockRepository.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil)
 
 	err := s.sut.Handle(ctx, cmd)
 	expectedErr := multierr.Combine(
