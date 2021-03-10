@@ -8,6 +8,11 @@ openapi_to_web:
 changelog:
 	git-chglog -o CHANGELOG.md
 
-release: changelog
+release_changelog:
+	git add CHANGELOG.md
+	git commit -m "chore: release new changelog"
+	git push -u origin master
+
+release: changelog release_changelog
 
 .PHONY: setup openapi_to_web changelog release
