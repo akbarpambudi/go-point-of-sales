@@ -8,13 +8,16 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/adapter/adapterent/ent/category"
+	"github.com/google/uuid"
 )
 
 // Category is the model entity for the Category schema.
 type Category struct {
-	config
+	config `json:"-"`
 	// ID of the ent.
-	ID int `json:"id,omitempty"`
+	ID uuid.UUID `json:"id,omitempty"`
+	// Name holds the value of the "name" field.
+	Name string `json:"name,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -22,8 +25,10 @@ func (*Category) scanValues(columns []string) ([]interface{}, error) {
 	values := make([]interface{}, len(columns))
 	for i := range columns {
 		switch columns[i] {
+		case category.FieldName:
+			values[i] = &sql.NullString{}
 		case category.FieldID:
-			values[i] = &sql.NullInt64{}
+			values[i] = &uuid.UUID{}
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type Category", columns[i])
 		}
@@ -40,11 +45,17 @@ func (c *Category) assignValues(columns []string, values []interface{}) error {
 	for i := range columns {
 		switch columns[i] {
 		case category.FieldID:
-			value, ok := values[i].(*sql.NullInt64)
-			if !ok {
-				return fmt.Errorf("unexpected type %T for field id", value)
+			if value, ok := values[i].(*uuid.UUID); !ok {
+				return fmt.Errorf("unexpected type %T for field id", values[i])
+			} else if value != nil {
+				c.ID = *value
 			}
-			c.ID = int(value.Int64)
+		case category.FieldName:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field name", values[i])
+			} else if value.Valid {
+				c.Name = value.String
+			}
 		}
 	}
 	return nil
@@ -73,6 +84,8 @@ func (c *Category) String() string {
 	var builder strings.Builder
 	builder.WriteString("Category(")
 	builder.WriteString(fmt.Sprintf("id=%v", c.ID))
+	builder.WriteString(", name=")
+	builder.WriteString(c.Name)
 	builder.WriteByte(')')
 	return builder.String()
 }

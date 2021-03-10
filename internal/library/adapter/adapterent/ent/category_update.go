@@ -26,6 +26,12 @@ func (cu *CategoryUpdate) Where(ps ...predicate.Category) *CategoryUpdate {
 	return cu
 }
 
+// SetName sets the "name" field.
+func (cu *CategoryUpdate) SetName(s string) *CategoryUpdate {
+	cu.mutation.SetName(s)
+	return cu
+}
+
 // Mutation returns the CategoryMutation object of the builder.
 func (cu *CategoryUpdate) Mutation() *CategoryMutation {
 	return cu.mutation
@@ -88,7 +94,7 @@ func (cu *CategoryUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			Table:   category.Table,
 			Columns: category.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: category.FieldID,
 			},
 		},
@@ -99,6 +105,13 @@ func (cu *CategoryUpdate) sqlSave(ctx context.Context) (n int, err error) {
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := cu.mutation.Name(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: category.FieldName,
+		})
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, cu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -116,6 +129,12 @@ type CategoryUpdateOne struct {
 	config
 	hooks    []Hook
 	mutation *CategoryMutation
+}
+
+// SetName sets the "name" field.
+func (cuo *CategoryUpdateOne) SetName(s string) *CategoryUpdateOne {
+	cuo.mutation.SetName(s)
+	return cuo
 }
 
 // Mutation returns the CategoryMutation object of the builder.
@@ -180,7 +199,7 @@ func (cuo *CategoryUpdateOne) sqlSave(ctx context.Context) (_node *Category, err
 			Table:   category.Table,
 			Columns: category.Columns,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: category.FieldID,
 			},
 		},
@@ -196,6 +215,13 @@ func (cuo *CategoryUpdateOne) sqlSave(ctx context.Context) (_node *Category, err
 				ps[i](selector)
 			}
 		}
+	}
+	if value, ok := cuo.mutation.Name(); ok {
+		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: category.FieldName,
+		})
 	}
 	_node = &Category{config: cuo.config}
 	_spec.Assign = _node.assignValues

@@ -1,6 +1,10 @@
 package schema
 
-import "entgo.io/ent"
+import (
+	"entgo.io/ent"
+	"entgo.io/ent/schema/field"
+	"github.com/google/uuid"
+)
 
 // Category holds the schema definition for the Category entity.
 type Category struct {
@@ -9,7 +13,10 @@ type Category struct {
 
 // Fields of the Category.
 func (Category) Fields() []ent.Field {
-	return nil
+	return []ent.Field{
+		field.UUID("id", uuid.UUID{}).Immutable(),
+		field.String("name"),
+	}
 }
 
 // Edges of the Category.

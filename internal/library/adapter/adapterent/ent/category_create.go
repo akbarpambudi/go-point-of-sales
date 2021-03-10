@@ -4,11 +4,13 @@ package ent
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/adapter/adapterent/ent/category"
+	"github.com/google/uuid"
 )
 
 // CategoryCreate is the builder for creating a Category entity.
@@ -16,6 +18,18 @@ type CategoryCreate struct {
 	config
 	mutation *CategoryMutation
 	hooks    []Hook
+}
+
+// SetName sets the "name" field.
+func (cc *CategoryCreate) SetName(s string) *CategoryCreate {
+	cc.mutation.SetName(s)
+	return cc
+}
+
+// SetID sets the "id" field.
+func (cc *CategoryCreate) SetID(u uuid.UUID) *CategoryCreate {
+	cc.mutation.SetID(u)
+	return cc
 }
 
 // Mutation returns the CategoryMutation object of the builder.
@@ -69,6 +83,9 @@ func (cc *CategoryCreate) SaveX(ctx context.Context) *Category {
 
 // check runs all checks and user-defined validators on the builder.
 func (cc *CategoryCreate) check() error {
+	if _, ok := cc.mutation.Name(); !ok {
+		return &ValidationError{Name: "name", err: errors.New("ent: missing required field \"name\"")}
+	}
 	return nil
 }
 
@@ -80,8 +97,6 @@ func (cc *CategoryCreate) sqlSave(ctx context.Context) (*Category, error) {
 		}
 		return nil, err
 	}
-	id := _spec.ID.Value.(int64)
-	_node.ID = int(id)
 	return _node, nil
 }
 
@@ -91,11 +106,23 @@ func (cc *CategoryCreate) createSpec() (*Category, *sqlgraph.CreateSpec) {
 		_spec = &sqlgraph.CreateSpec{
 			Table: category.Table,
 			ID: &sqlgraph.FieldSpec{
-				Type:   field.TypeInt,
+				Type:   field.TypeUUID,
 				Column: category.FieldID,
 			},
 		}
 	)
+	if id, ok := cc.mutation.ID(); ok {
+		_node.ID = id
+		_spec.ID.Value = id
+	}
+	if value, ok := cc.mutation.Name(); ok {
+		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
+			Type:   field.TypeString,
+			Value:  value,
+			Column: category.FieldName,
+		})
+		_node.Name = value
+	}
 	return _node, _spec
 }
 
@@ -138,8 +165,6 @@ func (ccb *CategoryCreateBulk) Save(ctx context.Context) ([]*Category, error) {
 				if err != nil {
 					return nil, err
 				}
-				id := specs[i].ID.Value.(int64)
-				nodes[i].ID = int(id)
 				return nodes[i], nil
 			})
 			for i := len(builder.hooks) - 1; i >= 0; i-- {
