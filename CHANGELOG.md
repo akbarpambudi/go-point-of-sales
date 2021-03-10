@@ -1,6 +1,35 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+### Chore
+- add 'release_changelog' task on makefile
+
+
+<a name="v1.2.0"></a>
+## [v1.2.0] - 2021-03-11
+### Code Refactoring
+- make category repository to return and accept pointer of category entity
+- turn category's error into POSError
+
+### Features
+- create 'CreateCategory' command handler
+
+### Test
+- create unit testing for 'CreateCategory' command handler
+
+
+<a name="v1.1.0"></a>
+## [v1.1.0] - 2021-03-10
+### Chore
+- create change log document
+
+### Code Refactoring
+- refactor product handler base url to /api/product
+
+### Features
+- add variant on product get by id handler
+- add variant on product read model
+
 
 <a name="v0.0.1"></a>
 ## v0.0.1 - 2021-03-10
@@ -40,4 +69,6 @@
 - create product entity on product domain
 
 
-[Unreleased]: https://github.com/akbarpambudi/go-point-of-sales/compare/v0.0.1...HEAD
+[Unreleased]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.2.0...HEAD
+[v1.2.0]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.1.0...v1.2.0
+[v1.1.0]: https://github.com/akbarpambudi/go-point-of-sales/compare/v0.0.1...v1.1.0
