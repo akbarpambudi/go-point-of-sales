@@ -1,8 +1,23 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+
+<a name="v1.3.0"></a>
+## [v1.3.0] - 2021-03-11
 ### Chore
+- release new changelog
 - add 'release_changelog' task on makefile
+
+### Code Refactoring
+- add open api to web code generator for category
+- add CreateCategory handler on Application Command list
+- move product web handler into new package
+
+### Features
+- register product web handler api on library service
+- generate web api handler for category base on the api spec
+- create api spec for category
+- add adapter implementation for category repository
 
 
 <a name="v1.2.0"></a>
@@ -69,6 +84,7 @@
 - create product entity on product domain
 
 
-[Unreleased]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.3.0...HEAD
+[v1.3.0]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.2.0...v1.3.0
 [v1.2.0]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/akbarpambudi/go-point-of-sales/compare/v0.0.1...v1.1.0
