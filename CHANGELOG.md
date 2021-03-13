@@ -3,6 +3,7 @@
 
 ### Chore
 - release new changelog
+- release new changelog
 
 ### Test
 - update product component testing, add new test case for get product by id API
