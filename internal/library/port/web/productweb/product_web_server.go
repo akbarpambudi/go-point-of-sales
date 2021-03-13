@@ -25,21 +25,22 @@ func (p Server) CreateProduct(ctx echo.Context) error {
 	}
 
 	var productVariants []command.ProductVariantDTO
-
-	for _, v := range *reqBody.Variants {
-		productVariant := command.ProductVariantDTO{
-			ID:    ptrval.StringVal(v.Id),
-			Code:  ptrval.StringVal(v.Code),
-			Name:  ptrval.StringVal(v.Name),
-			Price: float64(ptrval.Float32Val(v.Price)),
+	if reqBody.Variants != nil {
+		for _, v := range *reqBody.Variants {
+			productVariant := command.ProductVariantDTO{
+				ID:    ptrval.StringVal(v.Id),
+				Code:  ptrval.StringVal(v.Code),
+				Name:  ptrval.StringVal(v.Name),
+				Price: float64(ptrval.Float32Val(v.Price)),
+			}
+			productVariants = append(productVariants, productVariant)
 		}
-		productVariants = append(productVariants, productVariant)
 	}
 
 	cmd := command.CreateProduct{
-		ID:          *reqBody.Id,
-		Name:        *reqBody.Name,
-		CategoryRef: *reqBody.CategoryRef,
+		ID:          ptrval.StringVal(reqBody.Id),
+		Name:        ptrval.StringVal(reqBody.Name),
+		CategoryRef: ptrval.StringVal(reqBody.CategoryRef),
 		Variants:    productVariants,
 	}
 
@@ -47,7 +48,7 @@ func (p Server) CreateProduct(ctx echo.Context) error {
 	if err != nil {
 		return httphelper.WrapError(err)
 	}
-	return nil
+	return ctx.JSON(http.StatusCreated, nil)
 }
 
 func (p Server) GetProductById(ctx echo.Context, productId ProductIdParameter) error {
