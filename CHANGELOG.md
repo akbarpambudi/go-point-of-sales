@@ -1,8 +1,30 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+
+<a name="1.4.2"></a>
+## [1.4.2] - 2021-03-14
+### Bug Fixes
+- category creation API should response with status 201 - Created if there is no error happened
+
 ### Chore
 - release new changelog
+- release new changelog
+
+### Code Refactoring
+- wrap error returned from NewCategory factory function with IllegalCreationInputError in order to standardize the error
+- refactor product/errhelper.go name to error_helper.go in order to follow internal naming conventions
+
+### Features
+- add utility type for constructing json in API Testing
+- create error key constant for category creation
+- create `IllegalCreationInputError` on category domain entity pkg in order to standardize validation error
+
+### Test
+- add component testing for "category creation API should response with status 201 - Created if there is no error happened"
+- change JSONDictionary type to testinghelper.JSONDictionary in product_component_test.go
+- update create_category command handler unit test that correlated with domain validation error testing
+- update category entity unit test that correlated with validation error testing
 
 
 <a name="v1.4.1"></a>
@@ -116,7 +138,8 @@
 - create product entity on product domain
 
 
-[Unreleased]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.4.1...HEAD
+[Unreleased]: https://github.com/akbarpambudi/go-point-of-sales/compare/1.4.2...HEAD
+[1.4.2]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.4.1...1.4.2
 [v1.4.1]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.4.0...v1.4.1
 [v1.4.0]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.3.0...v1.4.0
 [v1.3.0]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.2.0...v1.3.0
