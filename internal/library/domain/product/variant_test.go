@@ -61,7 +61,11 @@ func (s VariantTestSuite) TestCallNewVariantToCreateVariantShouldValidateInput()
 				code:  "",
 				price: 0,
 			},
-			want: multierr.Combine(product.ErrVariantIDCantBeEmpty, product.ErrVariantNameCantBeEmpty, product.ErrVariantPriceMustGreaterThanZero),
+			want: product.IllegalVariantCreationInputErr(
+				multierr.Combine(product.ErrVariantIDCantBeEmpty,
+					product.ErrVariantNameCantBeEmpty,
+					product.ErrVariantPriceMustGreaterThanZero),
+			),
 		},
 		{
 			args: testRecordArgs{
@@ -69,7 +73,7 @@ func (s VariantTestSuite) TestCallNewVariantToCreateVariantShouldValidateInput()
 				code:  "1001001",
 				price: 1000,
 			},
-			want: product.ErrVariantIDCantBeEmpty,
+			want: product.IllegalVariantCreationInputErr(product.ErrVariantIDCantBeEmpty),
 		},
 		{
 			args: testRecordArgs{
@@ -77,14 +81,14 @@ func (s VariantTestSuite) TestCallNewVariantToCreateVariantShouldValidateInput()
 				code:  "1001001",
 				price: 1000,
 			},
-			want: product.ErrVariantNameCantBeEmpty,
+			want: product.IllegalVariantCreationInputErr(product.ErrVariantNameCantBeEmpty),
 		},
 		{
 			args: testRecordArgs{
 				id:   "74d6eafe-e547-47e0-9058-7621ff86faf2",
 				name: "Paket Komplit",
 			},
-			want: product.ErrVariantPriceMustGreaterThanZero,
+			want: product.IllegalVariantCreationInputErr(product.ErrVariantPriceMustGreaterThanZero),
 		},
 		{
 			args: testRecordArgs{

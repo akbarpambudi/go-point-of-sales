@@ -164,7 +164,7 @@ func (s ItemTestSuite) TestCallNewProductToCreateNewProductShouldValidateInput()
 				categoryRef: "6d3335fa-0bf7-4f3c-a439-14d7c2e31c06",
 				variants:    nil,
 			},
-			want: product.ErrProductAtLeastHaveOneVariant,
+			want: product.IllegalProductCreationInputErr(product.ErrProductAtLeastHaveOneVariant),
 		},
 		{
 			testArgs: testTableTestArgs{
@@ -179,7 +179,7 @@ func (s ItemTestSuite) TestCallNewProductToCreateNewProductShouldValidateInput()
 					},
 				},
 			},
-			want: product.ErrProductIDCantBeEmpty,
+			want: product.IllegalProductCreationInputErr(product.ErrProductIDCantBeEmpty),
 		},
 		{
 			testArgs: testTableTestArgs{
@@ -194,7 +194,7 @@ func (s ItemTestSuite) TestCallNewProductToCreateNewProductShouldValidateInput()
 					},
 				},
 			},
-			want: product.ErrProductNameCantBeEmpty,
+			want: product.IllegalProductCreationInputErr(product.ErrProductNameCantBeEmpty),
 		},
 		{
 			testArgs: testTableTestArgs{
@@ -209,11 +209,11 @@ func (s ItemTestSuite) TestCallNewProductToCreateNewProductShouldValidateInput()
 					},
 				},
 			},
-			want: product.ErrProductCategoryRefCantBeEmpty,
+			want: product.IllegalProductCreationInputErr(product.ErrProductCategoryRefCantBeEmpty),
 		},
 		{
 			testArgs: testTableTestArgs{},
-			want:     multierr.Combine(product.ErrProductIDCantBeEmpty, product.ErrProductCategoryRefCantBeEmpty, product.ErrProductNameCantBeEmpty, product.ErrProductAtLeastHaveOneVariant),
+			want:     product.IllegalProductCreationInputErr(multierr.Combine(product.ErrProductIDCantBeEmpty, product.ErrProductCategoryRefCantBeEmpty, product.ErrProductNameCantBeEmpty, product.ErrProductAtLeastHaveOneVariant)),
 		},
 	}
 

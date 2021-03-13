@@ -61,12 +61,12 @@ func (s CreateProductHandlerTestSuite) TestCallHandleToHandleCreateProductComman
 	s.mockRepository.EXPECT().Create(gomock.Any(), gomock.Any()).Return(nil)
 
 	err := s.sut.Handle(ctx, cmd)
-	expectedErr := multierr.Combine(
+	expectedErr := product.IllegalProductCreationInputErr(multierr.Combine(
 		product.ErrProductIDCantBeEmpty,
 		product.ErrProductCategoryRefCantBeEmpty,
 		product.ErrProductNameCantBeEmpty,
 		product.ErrProductAtLeastHaveOneVariant,
-	)
+	))
 	s.Assert().Equal(expectedErr, err)
 }
 

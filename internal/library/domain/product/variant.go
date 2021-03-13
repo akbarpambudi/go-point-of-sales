@@ -23,7 +23,7 @@ func NewVariant(id string, code string, name string, price float64) (variant *Va
 	}
 
 	if err != nil {
-		return nil, err
+		return nil, IllegalVariantCreationInputErr(err)
 	}
 
 	return &Variant{

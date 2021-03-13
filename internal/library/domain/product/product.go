@@ -1,6 +1,8 @@
 package product
 
-import "go.uber.org/multierr"
+import (
+	"go.uber.org/multierr"
+)
 
 type Product struct {
 	id          string
@@ -28,7 +30,7 @@ func NewProduct(id string, categoryRef string, name string, variants []*Variant)
 	}
 
 	if err != nil {
-		return nil, err
+		return nil, IllegalProductCreationInputErr(err)
 	}
 
 	return &Product{id: id, categoryRef: categoryRef, name: name, variants: variants}, nil
