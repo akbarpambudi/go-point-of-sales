@@ -1,7 +1,11 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+
+<a name="v1.4.1"></a>
+## [v1.4.1] - 2021-03-14
 ### Chore
+- release new changelog
 - release new changelog
 - release new changelog
 
@@ -109,7 +113,8 @@
 - create product entity on product domain
 
 
-[Unreleased]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.4.1...HEAD
+[v1.4.1]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.4.0...v1.4.1
 [v1.4.0]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.3.0...v1.4.0
 [v1.3.0]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.2.0...v1.3.0
 [v1.2.0]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.1.0...v1.2.0
