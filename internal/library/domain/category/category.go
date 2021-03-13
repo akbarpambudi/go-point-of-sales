@@ -20,7 +20,7 @@ func NewCategory(id string, name string) (category *Category, err error) {
 	}
 
 	if err != nil {
-		return nil, err
+		return nil, IllegalCreationInputError(err)
 	}
 
 	return &Category{
