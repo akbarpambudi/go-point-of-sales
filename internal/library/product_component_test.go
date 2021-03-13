@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/akbarpambudi/go-point-of-sales/internal/common/errors"
+	"github.com/akbarpambudi/go-point-of-sales/internal/common/testinghelper"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/adapter/adapterent/ent"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/adapter/adapterent/ent/enttest"
@@ -16,7 +17,7 @@ import (
 	"testing"
 )
 
-type JSONDictionary = map[string]interface{}
+type JSONDictionary = testinghelper.JSONDictionary
 
 type ProductComponentTestSuite struct {
 	suite.Suite
