@@ -15,3 +15,7 @@ func NewInternalError(messageKey string, message string) error {
 func NewIllegalInputError(messageKey string, message string) error {
 	return NewPOSError(ErrorTypeIllegalInputError, messageKey, message)
 }
+
+func NewResourceNotFoundError(messageKey string, message string) error {
+	return NewPOSError(ErrorTypeResourceNotFoundError, messageKey, message)
+}

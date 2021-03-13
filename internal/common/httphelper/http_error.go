@@ -43,6 +43,9 @@ func mapPOSHTTPErrorToEchoHTTPError(errType errors.ErrorType, httpError POSHTTPE
 		return echo.NewHTTPError(http.StatusBadRequest, httpError)
 	case errors.ErrorTypeIllegalInputError:
 		return echo.NewHTTPError(http.StatusBadRequest, httpError)
+	case errors.ErrorTypeResourceNotFoundError:
+		return echo.NewHTTPError(http.StatusNotFound, httpError)
+
 	}
 	return echo.NewHTTPError(http.StatusInternalServerError, httpError)
 }

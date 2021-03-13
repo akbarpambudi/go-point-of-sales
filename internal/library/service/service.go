@@ -11,9 +11,18 @@ import (
 	"log"
 )
 
-func NewApplication(ctx context.Context) (app.Application, func(), error) {
+type ApplicationOptions struct {
+	Client *ent.Client
+}
+
+func NewApplication(ctx context.Context, options ApplicationOptions) (app.Application, func(), error) {
 	noopCleansingFunc := func() {}
 	client, err := ent.Open("sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+
+	if options.Client != nil {
+		client = options.Client
+	}
+
 	if err != nil {
 		return app.Application{}, noopCleansingFunc, err
 	}

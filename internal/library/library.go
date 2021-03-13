@@ -2,6 +2,7 @@ package library
 
 import (
 	"context"
+	"github.com/akbarpambudi/go-point-of-sales/internal/library/adapter/adapterent/ent"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/port/web/categoryweb"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/port/web/productweb"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/service"
@@ -9,10 +10,25 @@ import (
 	"net/http"
 )
 
-func NewWebService(ctx context.Context) (http.Handler, func(), error) {
-	e := echo.New()
+type WebServiceOptions struct {
+	Client *ent.Client
+}
 
-	application, cleansingFunc, err := service.NewApplication(ctx)
+type WebServiceOptionsSetter func(options *WebServiceOptions)
+
+func (o *WebServiceOptions) ApplySetters(optionsSetters ...WebServiceOptionsSetter) {
+	for _, setTo := range optionsSetters {
+		setTo(o)
+	}
+}
+
+func NewWebService(ctx context.Context, optionsSetters ...WebServiceOptionsSetter) (http.Handler, func(), error) {
+	e := echo.New()
+	opts := WebServiceOptions{}
+	opts.ApplySetters(optionsSetters...)
+	application, cleansingFunc, err := service.NewApplication(ctx, service.ApplicationOptions{
+		Client: opts.Client,
+	})
 	if err != nil {
 		return nil, nil, err
 	}

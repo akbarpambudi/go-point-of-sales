@@ -2,12 +2,16 @@ package adapterent
 
 import (
 	"context"
+	"github.com/akbarpambudi/go-point-of-sales/internal/library/adapter/adapterent/ent"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/app/query"
 )
 
 func (p ProductRepository) LoadById(ctx context.Context, id string) (query.Product, error) {
 	domainEntity, err := p.Load(ctx, id)
 	if err != nil {
+		if ent.IsNotFound(err) {
+			return query.Product{}, query.ErrProductResourceNotFound
+		}
 		return query.Product{}, err
 	}
 
