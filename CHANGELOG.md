@@ -1,6 +1,12 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+### Chore
+- release new changelog
+
+### Test
+- update product component testing, add new test case for get product by id API
+
 
 <a name="v1.4.0"></a>
 ## [v1.4.0] - 2021-03-13
