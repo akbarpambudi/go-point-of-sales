@@ -2,12 +2,16 @@ package library_test
 
 import (
 	"context"
+	"fmt"
+	"github.com/akbarpambudi/go-point-of-sales/internal/common/errors"
 	"github.com/akbarpambudi/go-point-of-sales/internal/common/testinghelper"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/adapter/adapterent/ent"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/adapter/adapterent/ent/enttest"
+	"github.com/akbarpambudi/go-point-of-sales/internal/library/domain/category"
 	"github.com/google/uuid"
 	"github.com/steinfletcher/apitest"
+	jsonpath "github.com/steinfletcher/apitest-jsonpath"
 	"github.com/stretchr/testify/suite"
 	"net/http"
 	"testing"
@@ -46,6 +50,87 @@ func (s CategoryComponentTestSuite) TestCreateCategoryShouldBeSuccess() {
 		}).Expect(s.T()).
 		Status(http.StatusCreated).
 		End()
+}
+
+func (s CategoryComponentTestSuite) TestCreateCategoryShouldResponseWithBadRequest() {
+	type expectedResponse struct {
+		responseBodyMatcher func(*http.Response, *http.Request) error
+	}
+	testTable := []struct {
+		requestBody JSONDictionary
+		want        expectedResponse
+	}{
+		{
+			requestBody: JSONDictionary{
+				"name": "Dessert",
+			},
+			want: expectedResponse{
+				responseBodyMatcher: jsonpath.
+					Chain().
+					Equal("$.message", "invalid input data").
+					Equal("$.messageKey", category.CreationErrKey).
+					Equal("$.errorType", errors.ErrorTypeIllegalInputError).
+					Contains("$.children[*]", JSONDictionary{
+						"message":    category.ErrCategoryIDCantBeEmpty.(*errors.POSError).Message(),
+						"messageKey": category.ErrCategoryIDCantBeEmpty.(*errors.POSError).Key(),
+						"errorType":  category.ErrCategoryIDCantBeEmpty.(*errors.POSError).ErrType(),
+					}).
+					End(),
+			},
+		},
+		{
+			requestBody: JSONDictionary{
+				"id": "f1e1a9fa-690f-4756-907a-1d85bc044391",
+			},
+			want: expectedResponse{
+				responseBodyMatcher: jsonpath.
+					Chain().
+					Equal("$.message", "invalid input data").
+					Equal("$.messageKey", category.CreationErrKey).
+					Equal("$.errorType", errors.ErrorTypeIllegalInputError).
+					Contains("$.children[*]", JSONDictionary{
+						"message":    category.ErrCategoryNameCantBeEmpty.(*errors.POSError).Message(),
+						"messageKey": category.ErrCategoryNameCantBeEmpty.(*errors.POSError).Key(),
+						"errorType":  category.ErrCategoryNameCantBeEmpty.(*errors.POSError).ErrType(),
+					}).
+					End(),
+			},
+		},
+		{
+			requestBody: JSONDictionary{},
+			want: expectedResponse{
+				responseBodyMatcher: jsonpath.
+					Chain().
+					Equal("$.message", "invalid input data").
+					Equal("$.messageKey", category.CreationErrKey).
+					Equal("$.errorType", errors.ErrorTypeIllegalInputError).
+					Contains("$.children[*]", JSONDictionary{
+						"message":    category.ErrCategoryNameCantBeEmpty.(*errors.POSError).Message(),
+						"messageKey": category.ErrCategoryNameCantBeEmpty.(*errors.POSError).Key(),
+						"errorType":  category.ErrCategoryNameCantBeEmpty.(*errors.POSError).ErrType(),
+					}).
+					Contains("$.children[*]", JSONDictionary{
+						"message":    category.ErrCategoryIDCantBeEmpty.(*errors.POSError).Message(),
+						"messageKey": category.ErrCategoryIDCantBeEmpty.(*errors.POSError).Key(),
+						"errorType":  category.ErrCategoryIDCantBeEmpty.(*errors.POSError).ErrType(),
+					}).
+					End(),
+			},
+		},
+	}
+
+	for i, r := range testTable {
+		testCaseName := fmt.Sprintf("TestCase#%d", i)
+		s.Run(testCaseName, func() {
+			apitest.New("Test Create Category").
+				Handler(s.service).
+				Post("/api/category").
+				JSON(r.requestBody).Expect(s.T()).
+				Status(http.StatusBadRequest).
+				Assert(r.want.responseBodyMatcher).
+				End()
+		})
+	}
 }
 
 func (s *CategoryComponentTestSuite) setupDataSample() {
