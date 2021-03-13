@@ -1,8 +1,23 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+
+<a name="v1.4.0"></a>
+## [v1.4.0] - 2021-03-13
 ### Chore
+- add API test library
+- update open_api_web task, add script to generate http client for product and category REST API
 - release new changelog
+- release new changelog
+
+### Features
+- generate http client for product and category REST API
+- refactor product and variant creation error on library domain
+- create POSHTTPError to map error to http error
+- create multi error on errors package
+
+### Test
+- create component testing for product creation rest API
 
 
 <a name="v1.3.0"></a>
@@ -87,7 +102,8 @@
 - create product entity on product domain
 
 
-[Unreleased]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.4.0...HEAD
+[v1.4.0]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.3.0...v1.4.0
 [v1.3.0]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.2.0...v1.3.0
 [v1.2.0]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.1.0...v1.2.0
 [v1.1.0]: https://github.com/akbarpambudi/go-point-of-sales/compare/v0.0.1...v1.1.0
