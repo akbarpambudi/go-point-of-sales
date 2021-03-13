@@ -44,19 +44,21 @@ func (s CategoryTestSuite) TestCallNewCategoryShouldValidateInput() {
 	testTable := []testRecord{
 		{
 			args: testArgs{},
-			want: multierr.Combine(category.ErrCategoryIDCantBeEmpty, category.ErrCategoryNameCantBeEmpty),
+			want: category.IllegalCreationInputError(
+				multierr.Combine(category.ErrCategoryIDCantBeEmpty, category.ErrCategoryNameCantBeEmpty),
+			),
 		},
 		{
 			args: testArgs{
 				id: "7da82be2-139f-4b16-b083-231d7c30ffbf",
 			},
-			want: category.ErrCategoryNameCantBeEmpty,
+			want: category.IllegalCreationInputError(category.ErrCategoryNameCantBeEmpty),
 		},
 		{
 			args: testArgs{
 				name: "Main Course",
 			},
-			want: category.ErrCategoryIDCantBeEmpty,
+			want: category.IllegalCreationInputError(category.ErrCategoryIDCantBeEmpty),
 		},
 	}
 
