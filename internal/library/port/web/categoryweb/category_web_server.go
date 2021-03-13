@@ -6,6 +6,7 @@ import (
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/app"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/app/command"
 	"github.com/labstack/echo/v4"
+	"net/http"
 )
 
 type Server struct {
@@ -33,5 +34,5 @@ func (s Server) CreateCategory(ctx echo.Context) error {
 		return httphelper.WrapError(err)
 	}
 
-	return nil
+	return ctx.JSON(http.StatusCreated, nil)
 }
