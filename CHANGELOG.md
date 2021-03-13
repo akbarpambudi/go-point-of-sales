@@ -2,6 +2,15 @@
 ## [Unreleased]
 
 
+<a name="v1.4.3"></a>
+## [v1.4.3] - 2021-03-14
+### Chore
+- release new changelog
+
+### Test
+- add component testing for "category creation API should response with status 400 - Bad Request if request is invalid"
+
+
 <a name="1.4.2"></a>
 ## [1.4.2] - 2021-03-14
 ### Bug Fixes
@@ -138,7 +147,8 @@
 - create product entity on product domain
 
 
-[Unreleased]: https://github.com/akbarpambudi/go-point-of-sales/compare/1.4.2...HEAD
+[Unreleased]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.4.3...HEAD
+[v1.4.3]: https://github.com/akbarpambudi/go-point-of-sales/compare/1.4.2...v1.4.3
 [1.4.2]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.4.1...1.4.2
 [v1.4.1]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.4.0...v1.4.1
 [v1.4.0]: https://github.com/akbarpambudi/go-point-of-sales/compare/v1.3.0...v1.4.0
