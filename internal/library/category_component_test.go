@@ -133,6 +133,26 @@ func (s CategoryComponentTestSuite) TestCreateCategoryShouldResponseWithBadReque
 	}
 }
 
+func (s CategoryComponentTestSuite) TestGetCategoryByIDShouldBeSuccess() {
+	apitest.New("Test Get Category by ID").
+		Handler(s.service).
+		Get("/api/category/e88d1f9b-d7b7-437a-9c6a-2a80291c2427").
+		Expect(s.T()).
+		Status(http.StatusOK).
+		Assert(jsonpath.Equal("$.id", "e88d1f9b-d7b7-437a-9c6a-2a80291c2427")).
+		Assert(jsonpath.Equal("$.name", "Main Course")).
+		End()
+}
+
+func (s CategoryComponentTestSuite) TestGetCategoryByIDShouldReturnStatusNotFound() {
+	apitest.New("Test Get Category by ID").
+		Handler(s.service).
+		Get("/api/category/bd3fcd27-40b7-493d-98b1-22d031c97960").
+		Expect(s.T()).
+		Status(http.StatusNotFound).
+		End()
+}
+
 func (s *CategoryComponentTestSuite) setupDataSample() {
 	ctx := context.TODO()
 	dataSamples := []struct {
