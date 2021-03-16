@@ -4,6 +4,10 @@
 package categoryweb
 
 import (
+	"fmt"
+	"net/http"
+
+	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	"github.com/labstack/echo/v4"
 )
 
@@ -12,6 +16,9 @@ type ServerInterface interface {
 
 	// (POST /category)
 	CreateCategory(ctx echo.Context) error
+
+	// (GET /category/{categoryId})
+	GetCategoryCategoryId(ctx echo.Context, categoryId CategoryIdParameter) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -25,6 +32,22 @@ func (w *ServerInterfaceWrapper) CreateCategory(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshalled arguments
 	err = w.Handler.CreateCategory(ctx)
+	return err
+}
+
+// GetCategoryCategoryId converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCategoryCategoryId(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "categoryId" -------------
+	var categoryId CategoryIdParameter
+
+	err = runtime.BindStyledParameter("simple", false, "categoryId", ctx.Param("categoryId"), &categoryId)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter categoryId: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.GetCategoryCategoryId(ctx, categoryId)
 	return err
 }
 
@@ -57,5 +80,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.POST(baseURL+"/category", wrapper.CreateCategory)
+	router.GET(baseURL+"/category/:categoryId", wrapper.GetCategoryCategoryId)
 
 }

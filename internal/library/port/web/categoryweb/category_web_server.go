@@ -36,3 +36,15 @@ func (s Server) CreateCategory(ctx echo.Context) error {
 
 	return ctx.JSON(http.StatusCreated, nil)
 }
+
+func (s Server) GetCategoryCategoryId(ctx echo.Context, categoryId CategoryIdParameter) error {
+	categoryRM, err := s.application.Queries.GetCategoryById.Handle(ctx.Request().Context(), string(categoryId))
+	if err != nil {
+		return httphelper.WrapError(err)
+	}
+
+	return ctx.JSON(http.StatusOK, Category{
+		Id:   &categoryRM.ID,
+		Name: &categoryRM.Name,
+	})
+}

@@ -9,6 +9,12 @@ type Category struct {
 	Name *string `json:"name,omitempty"`
 }
 
+// CategoryIdParameter defines model for CategoryIdParameter.
+type CategoryIdParameter string
+
+// GetCategoryByIdResponse defines model for GetCategoryByIdResponse.
+type GetCategoryByIdResponse Category
+
 // CreateCategoryJSONBody defines parameters for CreateCategory.
 type CreateCategoryJSONBody Category
 

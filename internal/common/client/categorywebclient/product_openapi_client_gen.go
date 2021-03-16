@@ -13,6 +13,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+
+	"github.com/deepmap/oapi-codegen/pkg/runtime"
 )
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
@@ -92,6 +94,9 @@ type ClientInterface interface {
 	CreateCategoryWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	CreateCategory(ctx context.Context, body CreateCategoryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetCategoryCategoryId request
+	GetCategoryCategoryId(ctx context.Context, categoryId CategoryIdParameter, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 func (c *Client) CreateCategoryWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -107,6 +112,17 @@ func (c *Client) CreateCategoryWithBody(ctx context.Context, contentType string,
 
 func (c *Client) CreateCategory(ctx context.Context, body CreateCategoryJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreateCategoryRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetCategoryCategoryId(ctx context.Context, categoryId CategoryIdParameter, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetCategoryCategoryIdRequest(c.Server, categoryId)
 	if err != nil {
 		return nil, err
 	}
@@ -152,6 +168,40 @@ func NewCreateCategoryRequestWithBody(server string, contentType string, body io
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetCategoryCategoryIdRequest generates requests for GetCategoryCategoryId
+func NewGetCategoryCategoryIdRequest(server string, categoryId CategoryIdParameter) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParam("simple", false, "categoryId", categoryId)
+	if err != nil {
+		return nil, err
+	}
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/category/%s", pathParam0)
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -204,6 +254,9 @@ type ClientWithResponsesInterface interface {
 	CreateCategoryWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*CreateCategoryResponse, error)
 
 	CreateCategoryWithResponse(ctx context.Context, body CreateCategoryJSONRequestBody) (*CreateCategoryResponse, error)
+
+	// GetCategoryCategoryId request
+	GetCategoryCategoryIdWithResponse(ctx context.Context, categoryId CategoryIdParameter) (*GetCategoryCategoryIdResponse, error)
 }
 
 type CreateCategoryResponse struct {
@@ -227,6 +280,28 @@ func (r CreateCategoryResponse) StatusCode() int {
 	return 0
 }
 
+type GetCategoryCategoryIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *Category
+}
+
+// Status returns HTTPResponse.Status
+func (r GetCategoryCategoryIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetCategoryCategoryIdResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 // CreateCategoryWithBodyWithResponse request with arbitrary body returning *CreateCategoryResponse
 func (c *ClientWithResponses) CreateCategoryWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*CreateCategoryResponse, error) {
 	rsp, err := c.CreateCategoryWithBody(ctx, contentType, body)
@@ -244,6 +319,15 @@ func (c *ClientWithResponses) CreateCategoryWithResponse(ctx context.Context, bo
 	return ParseCreateCategoryResponse(rsp)
 }
 
+// GetCategoryCategoryIdWithResponse request returning *GetCategoryCategoryIdResponse
+func (c *ClientWithResponses) GetCategoryCategoryIdWithResponse(ctx context.Context, categoryId CategoryIdParameter) (*GetCategoryCategoryIdResponse, error) {
+	rsp, err := c.GetCategoryCategoryId(ctx, categoryId)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetCategoryCategoryIdResponse(rsp)
+}
+
 // ParseCreateCategoryResponse parses an HTTP response from a CreateCategoryWithResponse call
 func ParseCreateCategoryResponse(rsp *http.Response) (*CreateCategoryResponse, error) {
 	bodyBytes, err := ioutil.ReadAll(rsp.Body)
@@ -258,6 +342,32 @@ func ParseCreateCategoryResponse(rsp *http.Response) (*CreateCategoryResponse, e
 	}
 
 	switch {
+	}
+
+	return response, nil
+}
+
+// ParseGetCategoryCategoryIdResponse parses an HTTP response from a GetCategoryCategoryIdWithResponse call
+func ParseGetCategoryCategoryIdResponse(rsp *http.Response) (*GetCategoryCategoryIdResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetCategoryCategoryIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest Category
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
 	}
 
 	return response, nil

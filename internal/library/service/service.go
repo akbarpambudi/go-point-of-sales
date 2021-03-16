@@ -33,6 +33,7 @@ func NewApplication(ctx context.Context, options ApplicationOptions) (app.Applic
 
 	productRepository := adapterent.NewProductRepository(client)
 	categoryRepository := adapterent.NewCategoryRepositoryEnt(client)
+	categoryReadModelProjector := adapterent.NewCategoryReadModelProjectEnt(client)
 
 	return app.Application{
 			Commands: app.Commands{
@@ -40,7 +41,8 @@ func NewApplication(ctx context.Context, options ApplicationOptions) (app.Applic
 				CreateCategory: command.NewCreateCategoryHandlerImpl(categoryRepository),
 			},
 			Queries: app.Queries{
-				GetProductById: query.NewGetProductByIDHandlerImpl(productRepository),
+				GetProductById:  query.NewGetProductByIDHandlerImpl(productRepository),
+				GetCategoryById: query.NewGetCategoryByIDHandlerImpl(categoryReadModelProjector),
 			},
 		}, func() {
 			err := client.Close()

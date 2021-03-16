@@ -13,3 +13,8 @@ type Variant struct {
 	Name  string
 	Price float64
 }
+
+type Category struct {
+	ID   string
+	Name string
+}

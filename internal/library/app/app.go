@@ -11,7 +11,8 @@ type Commands struct {
 }
 
 type Queries struct {
-	GetProductById query.GetProductByIDHandler
+	GetProductById  query.GetProductByIDHandler
+	GetCategoryById query.GetCategoryByIDHandler
 }
 
 type Application struct {

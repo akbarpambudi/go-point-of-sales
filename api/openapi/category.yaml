@@ -4,6 +4,23 @@ info:
   description: Product Category
   version: 1.0.0
 components:
+  responses:
+    GetCategoryByIdResponse:
+      description: get category by id response
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Category'
+
+  parameters:
+    CategoryIdParameter:
+      name: categoryId
+      in: path
+      required: true
+      description: category id
+      schema:
+        type: string
+
   schemas:
     Category:
       type: object
@@ -17,6 +34,14 @@ components:
 servers:
   - url: 'https://{hostname}/api'
 paths:
+  /category/{categoryId}:
+    get:
+      parameters:
+        - $ref: '#/components/parameters/CategoryIdParameter'
+      description: get category by id
+      responses:
+        '200':
+          $ref: '#/components/responses/GetCategoryByIdResponse'
   /category:
     post:
       operationId: createCategory
@@ -27,6 +52,6 @@ paths:
            schema:
              $ref: "#/components/schemas/Category"
       responses:
-        '200':
+        '201':
           description: OK
 
