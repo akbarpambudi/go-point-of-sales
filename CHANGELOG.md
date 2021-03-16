@@ -1,6 +1,15 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+### Chore
+- release new changelog
+
+### Features
+- `Get Category by ID` rest API handler
+
+### Test
+- define component test case for 'Get Category by ID' rest API
+
 
 <a name="v1.4.3"></a>
 ## [v1.4.3] - 2021-03-14
