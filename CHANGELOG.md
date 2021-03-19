@@ -2,6 +2,8 @@
 ## [Unreleased]
 
 ### Chore
+- Unit Test and End-to-end script
+- release new changelog
 - release new changelog
 
 
