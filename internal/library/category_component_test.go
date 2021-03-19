@@ -1,8 +1,13 @@
+//+build component_test
+
 package library_test
 
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"testing"
+
 	"github.com/akbarpambudi/go-point-of-sales/internal/common/errors"
 	"github.com/akbarpambudi/go-point-of-sales/internal/common/testinghelper"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library"
@@ -13,8 +18,6 @@ import (
 	"github.com/steinfletcher/apitest"
 	jsonpath "github.com/steinfletcher/apitest-jsonpath"
 	"github.com/stretchr/testify/suite"
-	"net/http"
-	"testing"
 )
 
 type CategoryComponentTestSuite struct {

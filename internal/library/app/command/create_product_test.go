@@ -1,14 +1,17 @@
+// +build unit_test
+
 package command_test
 
 import (
 	"context"
+	"testing"
+
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/app/command"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/app/command/mock/mockproduct"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/domain/product"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/multierr"
-	"testing"
 )
 
 //go:generate mockgen -source=./../../domain/product/repository.go -destination=./mock/mockproduct/mock_gen.go -package=mockproduct

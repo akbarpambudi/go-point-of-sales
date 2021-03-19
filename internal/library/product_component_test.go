@@ -1,8 +1,13 @@
+// +build component_test
+
 package library_test
 
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"testing"
+
 	"github.com/akbarpambudi/go-point-of-sales/internal/common/errors"
 	"github.com/akbarpambudi/go-point-of-sales/internal/common/testinghelper"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library"
@@ -11,10 +16,8 @@ import (
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/domain/product"
 	"github.com/google/uuid"
 	"github.com/steinfletcher/apitest"
-	"github.com/steinfletcher/apitest-jsonpath"
+	jsonpath "github.com/steinfletcher/apitest-jsonpath"
 	"github.com/stretchr/testify/suite"
-	"net/http"
-	"testing"
 )
 
 type JSONDictionary = testinghelper.JSONDictionary

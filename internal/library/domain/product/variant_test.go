@@ -1,11 +1,14 @@
+// +build unit_test
+
 package product_test
 
 import (
 	"fmt"
+	"testing"
+
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/domain/product"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/multierr"
-	"testing"
 )
 
 type VariantTestSuite struct {
