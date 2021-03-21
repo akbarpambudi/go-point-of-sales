@@ -1,6 +1,9 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+### Features
+- Get All Product API
+
 
 <a name="v1.5.0"></a>
 ## [v1.5.0] - 2021-03-16
