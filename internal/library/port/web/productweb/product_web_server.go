@@ -82,3 +82,39 @@ func (p Server) GetProductById(ctx echo.Context, productId ProductIdParameter) e
 
 	return nil
 }
+
+func (p Server) GetAllProducts(ctx echo.Context) error {
+	products, err := p.application.Queries.GetAllProducts.Handle(ctx.Request().Context())
+	if err != nil {
+		return httphelper.WrapError(err)
+	}
+	var responseBody GetAllProductsSuccessResponse
+	for _, p := range products {
+		var variants []Variant
+
+		for _, v := range p.Variants {
+			variantPrice := float32(v.Price)
+			variants = append(variants, Variant{
+				Code:  &v.Code,
+				Id:    &v.ID,
+				Name:  &v.Name,
+				Price: &variantPrice,
+			})
+		}
+
+		responseBody = append(responseBody, Product{
+			CategoryRef: &p.Category,
+			Id:          &p.ID,
+			Name:        &p.Name,
+			Variants:    &variants,
+		})
+	}
+
+	encodingErr := ctx.JSON(http.StatusOK, responseBody)
+
+	if encodingErr != nil {
+		return httphelper.WrapError(encodingErr)
+	}
+
+	return nil
+}

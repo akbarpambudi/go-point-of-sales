@@ -14,19 +14,25 @@ components:
         type: string
 
   responses:
+    GetAllProductsSuccessResponse:
+      description: get all product success response
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Product'
     GetProductByIdSuccessResponse:
       description: get product by id success response
       content:
         application/json:
           schema:
-            type: object
             $ref: '#/components/schemas/Product'
     ProductCreationSuccessResponse:
       description: product created response
       content:
         application/json:
           schema:
-            type: object
             $ref: '#/components/schemas/ProductCreated'
 
   schemas:
@@ -74,6 +80,12 @@ paths:
         '200':
           $ref: '#/components/responses/GetProductByIdSuccessResponse'
   /product:
+    get:
+      description: get all product
+      operationId: getAllProducts
+      responses:
+        '200':
+          $ref: '#/components/responses/GetAllProductsSuccessResponse'
     post:
       operationId: createProduct
       description: create new product

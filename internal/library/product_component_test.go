@@ -230,6 +230,24 @@ func (s ProductComponentTestSuite) TestGetProductByIDShouldReturnStatusNotFound(
 		End()
 }
 
+func (s ProductComponentTestSuite) TestGetAllProductsShouldBeSuccess() {
+	productAPITest := apitest.New("Test Get All Products").
+		Handler(s.service).
+		Debug()
+
+	products := s.ent.Product.Query().AllX(context.Background())
+
+	productAPITest.Get("/api/product").
+		Expect(s.T()).
+		Status(http.StatusOK).
+		Assert(jsonpath.Len("$", len(products))).
+		Assert(jsonpath.Present("$[*].id")).
+		Assert(jsonpath.Present("$[*].name")).
+		Assert(jsonpath.Present("$[*].categoryRef")).
+		Assert(jsonpath.Present("$[*].variants")).
+		End()
+}
+
 func (s *ProductComponentTestSuite) setupDataSample() {
 	s.Require().NotPanics(func() {
 		ctx := context.TODO()

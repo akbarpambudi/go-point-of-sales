@@ -27,6 +27,9 @@ type Variant struct {
 // ProductIdParameter defines model for ProductIdParameter.
 type ProductIdParameter string
 
+// GetAllProductsSuccessResponse defines model for GetAllProductsSuccessResponse.
+type GetAllProductsSuccessResponse []Product
+
 // GetProductByIdSuccessResponse defines model for GetProductByIdSuccessResponse.
 type GetProductByIdSuccessResponse Product
 

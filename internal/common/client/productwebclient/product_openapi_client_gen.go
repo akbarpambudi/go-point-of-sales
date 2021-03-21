@@ -90,6 +90,9 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 
 // The interface specification for the client above.
 type ClientInterface interface {
+	// GetAllProducts request
+	GetAllProducts(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// CreateProduct request  with any body
 	CreateProductWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -97,6 +100,17 @@ type ClientInterface interface {
 
 	// GetProductById request
 	GetProductById(ctx context.Context, productId ProductIdParameter, reqEditors ...RequestEditorFn) (*http.Response, error)
+}
+
+func (c *Client) GetAllProducts(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAllProductsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
 }
 
 func (c *Client) CreateProductWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -130,6 +144,33 @@ func (c *Client) GetProductById(ctx context.Context, productId ProductIdParamete
 		return nil, err
 	}
 	return c.Client.Do(req)
+}
+
+// NewGetAllProductsRequest generates requests for GetAllProducts
+func NewGetAllProductsRequest(server string) (*http.Request, error) {
+	var err error
+
+	queryUrl, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	basePath := fmt.Sprintf("/product")
+	if basePath[0] == '/' {
+		basePath = basePath[1:]
+	}
+
+	queryUrl, err = queryUrl.Parse(basePath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryUrl.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
 }
 
 // NewCreateProductRequest calls the generic CreateProduct builder with application/json body
@@ -250,6 +291,9 @@ func WithBaseURL(baseURL string) ClientOption {
 
 // ClientWithResponsesInterface is the interface specification for the client with responses above.
 type ClientWithResponsesInterface interface {
+	// GetAllProducts request
+	GetAllProductsWithResponse(ctx context.Context) (*GetAllProductsResponse, error)
+
 	// CreateProduct request  with any body
 	CreateProductWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*CreateProductResponse, error)
 
@@ -257,6 +301,28 @@ type ClientWithResponsesInterface interface {
 
 	// GetProductById request
 	GetProductByIdWithResponse(ctx context.Context, productId ProductIdParameter) (*GetProductByIdResponse, error)
+}
+
+type GetAllProductsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]Product
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAllProductsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAllProductsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
 }
 
 type CreateProductResponse struct {
@@ -303,6 +369,15 @@ func (r GetProductByIdResponse) StatusCode() int {
 	return 0
 }
 
+// GetAllProductsWithResponse request returning *GetAllProductsResponse
+func (c *ClientWithResponses) GetAllProductsWithResponse(ctx context.Context) (*GetAllProductsResponse, error) {
+	rsp, err := c.GetAllProducts(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAllProductsResponse(rsp)
+}
+
 // CreateProductWithBodyWithResponse request with arbitrary body returning *CreateProductResponse
 func (c *ClientWithResponses) CreateProductWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader) (*CreateProductResponse, error) {
 	rsp, err := c.CreateProductWithBody(ctx, contentType, body)
@@ -327,6 +402,32 @@ func (c *ClientWithResponses) GetProductByIdWithResponse(ctx context.Context, pr
 		return nil, err
 	}
 	return ParseGetProductByIdResponse(rsp)
+}
+
+// ParseGetAllProductsResponse parses an HTTP response from a GetAllProductsWithResponse call
+func ParseGetAllProductsResponse(rsp *http.Response) (*GetAllProductsResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer rsp.Body.Close()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAllProductsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []Product
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
 }
 
 // ParseCreateProductResponse parses an HTTP response from a CreateProductWithResponse call

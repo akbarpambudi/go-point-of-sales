@@ -18,3 +18,5 @@ type Category struct {
 	ID   string
 	Name string
 }
+
+type Products []Product

@@ -13,6 +13,7 @@ type Commands struct {
 type Queries struct {
 	GetProductById  query.GetProductByIDHandler
 	GetCategoryById query.GetCategoryByIDHandler
+	GetAllProducts  query.GetAllProductsHandler
 }
 
 type Application struct {

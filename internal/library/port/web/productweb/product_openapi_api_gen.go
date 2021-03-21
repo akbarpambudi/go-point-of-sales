@@ -14,6 +14,9 @@ import (
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
+	// (GET /product)
+	GetAllProducts(ctx echo.Context) error
+
 	// (POST /product)
 	CreateProduct(ctx echo.Context) error
 
@@ -24,6 +27,15 @@ type ServerInterface interface {
 // ServerInterfaceWrapper converts echo contexts to parameters.
 type ServerInterfaceWrapper struct {
 	Handler ServerInterface
+}
+
+// GetAllProducts converts echo context to params.
+func (w *ServerInterfaceWrapper) GetAllProducts(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshalled arguments
+	err = w.Handler.GetAllProducts(ctx)
+	return err
 }
 
 // CreateProduct converts echo context to params.
@@ -79,6 +91,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 		Handler: si,
 	}
 
+	router.GET(baseURL+"/product", wrapper.GetAllProducts)
 	router.POST(baseURL+"/product", wrapper.CreateProduct)
 	router.GET(baseURL+"/product/:productId", wrapper.GetProductById)
 
