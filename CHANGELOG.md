@@ -1,6 +1,9 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+### Features
+- handle 'GetAllProducts' API when there is no product.
+
 
 <a name="v1.6.0"></a>
 ## [v1.6.0] - 2021-03-21
