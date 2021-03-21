@@ -7,6 +7,7 @@ import (
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/port/web/productweb"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/service"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"net/http"
 )
 
@@ -26,6 +27,7 @@ func NewWebService(ctx context.Context, optionsSetters ...WebServiceOptionsSette
 	e := echo.New()
 	opts := WebServiceOptions{}
 	opts.ApplySetters(optionsSetters...)
+	e.Use(middleware.CORS())
 	application, cleansingFunc, err := service.NewApplication(ctx, service.ApplicationOptions{
 		Client: opts.Client,
 	})

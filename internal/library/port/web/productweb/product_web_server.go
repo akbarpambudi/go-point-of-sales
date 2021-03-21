@@ -109,9 +109,14 @@ func (p Server) GetAllProducts(ctx echo.Context) error {
 			Variants:    &variants,
 		})
 	}
-
-	encodingErr := ctx.JSON(http.StatusOK, responseBody)
-
+	if len(responseBody) == 0 {
+		encodingErr := ctx.NoContent(http.StatusNoContent)
+		if encodingErr != nil {
+			return httphelper.WrapError(encodingErr)
+		}
+		return nil
+	}
+	encodingErr := ctx.JSON(http.StatusOK, []Product(responseBody))
 	if encodingErr != nil {
 		return httphelper.WrapError(encodingErr)
 	}
