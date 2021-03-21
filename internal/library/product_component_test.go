@@ -248,6 +248,21 @@ func (s ProductComponentTestSuite) TestGetAllProductsShouldBeSuccess() {
 		End()
 }
 
+func (s ProductComponentTestSuite) TestGetAllProductsShouldReturnNoContentWhenThereIsNoData() {
+	productAPITest := apitest.New("Test Get All Products").
+		Handler(s.service).
+		Debug()
+	s.ent.Variant.Delete().ExecX(context.Background())
+	s.ent.Product.Delete().ExecX(context.Background())
+
+	productAPITest.Get("/api/product").
+		Expect(s.T()).
+		Status(http.StatusNoContent).
+		End()
+
+	s.setupDataSample()
+}
+
 func (s *ProductComponentTestSuite) setupDataSample() {
 	s.Require().NotPanics(func() {
 		ctx := context.TODO()
