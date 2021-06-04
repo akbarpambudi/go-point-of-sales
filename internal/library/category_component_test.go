@@ -49,7 +49,7 @@ func (s CategoryComponentTestSuite) TestCreateCategoryShouldBeSuccess() {
 		Post("/api/category").
 		JSON(testinghelper.JSONDictionary{
 			"id":   "f1e1a9fa-690f-4756-907a-1d85bc044391",
-			"name": "Dessert",
+			"name": "Beverage",
 		}).Expect(s.T()).
 		Status(http.StatusCreated).
 		End()
