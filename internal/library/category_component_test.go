@@ -15,6 +15,9 @@ import (
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/adapter/adapterent/ent/enttest"
 	"github.com/akbarpambudi/go-point-of-sales/internal/library/domain/category"
 	"github.com/google/uuid"
+	_ "github.com/lib/pq"
+	"github.com/orlangure/gnomock"
+	"github.com/orlangure/gnomock/preset/postgres"
 	"github.com/steinfletcher/apitest"
 	jsonpath "github.com/steinfletcher/apitest-jsonpath"
 	"github.com/stretchr/testify/suite"
@@ -25,21 +28,41 @@ type CategoryComponentTestSuite struct {
 	stopService func()
 	ent         *ent.Client
 	service     http.Handler
+	container   *gnomock.Container
 }
 
 func (s *CategoryComponentTestSuite) SetupSuite() {
-	s.ent = enttest.Open(s.T(), "sqlite3", "file:ent?mode=memory&cache=shared&_fk=1")
+	p := postgres.Preset(
+		postgres.WithUser("username", "password"),
+		postgres.WithDatabase("category"),
+	)
+	container, err := gnomock.Start(p)
+	if err != nil {
+		s.FailNow(err.Error())
+		return
+	}
+	connStr := fmt.Sprintf(
+		"host=%s port=%d user=%s password=%s  dbname=%s sslmode=disable",
+		container.Host, container.DefaultPort(),
+		"username", "password", "category",
+	)
+	s.ent = enttest.Open(s.T(), "postgres", connStr)
 	service, stopService, err := library.NewWebService(context.TODO(), library.SetDataSourceClient(s.ent))
 	if err != nil {
 		s.T().Fatal(err)
 	}
 	s.service = service
 	s.stopService = stopService
+	s.container = container
 	s.setupDataSample()
 }
 
 func (s *CategoryComponentTestSuite) TearDownSuite() {
 	_ = s.ent.Close()
+	err := gnomock.Stop(s.container)
+	if err != nil {
+		s.T().Error(err)
+	}
 	s.stopService()
 }
 

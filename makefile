@@ -28,11 +28,11 @@ unit_test:
 	go tool cover -func unit_test_coverprofile.cov
 
 component_test:
-	go test -coverpkg=./internal/.../... -coverprofile=component_test_coverprofile.cov ./internal/.../... --tags=component_test
+	go test -p 1 -coverpkg=./internal/.../... -coverprofile=component_test_coverprofile.cov ./internal/.../... --tags=component_test
 	go tool cover -func component_test_coverprofile.cov
 	
 test:
-	go test -coverpkg=./internal/.../... -coverprofile=all_test_coverprofile.cov ./internal/.../... --tags=unit_test component_test
+	go test -p 1 -coverpkg=./internal/.../... -coverprofile=all_test_coverprofile.cov ./internal/.../... --tags=unit_test component_test
 	go tool cover -func all_test_coverprofile.cov
 
 .PHONY: setup openapi_to_web changelog release component_test unit_test test
