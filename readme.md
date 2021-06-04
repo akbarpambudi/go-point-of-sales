@@ -13,3 +13,13 @@ This repository is highly inspired by some sources bellow:
 - https://threedots.tech/post/ddd-cqrs-clean-architecture-combined/
 
 ** note: Feel free to give a feedback about how I implement the concept from those articles. 
+
+## How to use this project
+### Setup and Preparation
+1. clone this repository
+2. execute `make setup` to install all required tools.
+3. sync the project dependencies using `go mod vendor`
+### Run Test
+1. run `make unit_test` for executing all unit test.
+2. run `make component_test` for executing all component test.
+3. run `make test` to executing unit test and component test.
