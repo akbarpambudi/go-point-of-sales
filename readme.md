@@ -23,6 +23,8 @@ This repository is highly inspired by some sources bellow:
 1. run `make unit_test` for executing all unit test.
 2. run `make component_test` for executing all component test.
 3. run `make test` to executing unit test and component test.
+
+***Note: there is some experiment happened on the `category` component testing, this experiment means to run Postgres containers during the test. Therefore, we can be able to run the test on real Postgres database environment. However, there is some limitation that appear, that is, you can only run the test when the docker is running on the machine, also you won't be able to run the component_test on parallel manner***
 ### Updating Existing OpenApi Specs
 1. openapi specs placed on the api/openapi directory.
 2. after updating the specs, you can execute `openapi_to_web` in order to generate the web adapter source code.
