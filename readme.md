@@ -23,3 +23,6 @@ This repository is highly inspired by some sources bellow:
 1. run `make unit_test` for executing all unit test.
 2. run `make component_test` for executing all component test.
 3. run `make test` to executing unit test and component test.
+### Updating Existing OpenApi Specs
+1. openapi specs placed on the api/openapi directory.
+2. after updating the specs, you can execute `openapi_to_web` in order to generate the web adapter source code.
